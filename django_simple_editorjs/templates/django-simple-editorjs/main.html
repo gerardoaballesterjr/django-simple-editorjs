@@ -1,0 +1,65 @@
+<div id="editorjs"></div>
+<textarea name="{{ name }}" id="{{ id }}" hidden>
+    {% if value %}{{value}}{% else %}[]{% endif %}
+</textarea>
+
+<script>
+    const blocks = document.getElementById("{{ id }}");
+    var editor = new EditorJS({
+        readOnly: false,
+        holder: 'editorjs',
+        tools: {
+            header: {
+                class: Header,
+                inlineToolbar: ['marker', 'link'],
+                config: {
+                    placeholder: 'Header'
+                },
+            },
+            image: SimpleImage,
+            list: {
+                class: List,
+                inlineToolbar: true,
+            },
+            checklist: {
+                class: Checklist,
+                inlineToolbar: true,
+            },
+            quote: {
+                class: Quote,
+                inlineToolbar: true,
+                config: {
+                    quotePlaceholder: 'Enter a quote',
+                    captionPlaceholder: 'Quote\'s author',
+                },
+            },
+            warning: Warning,
+            marker: {
+                class:  Marker,
+            },
+            code: {
+                class:  CodeTool,
+            },
+            delimiter: Delimiter,
+            inlineCode: {
+                class: InlineCode,
+            },
+            linkTool: LinkTool,
+            embed: Embed,
+            table: {
+                class: Table,
+                inlineToolbar: true,
+            },
+        },
+        data: {
+            blocks: JSON.parse(blocks.value),
+        },
+        onChange: function(api, event) {
+            editor.save().then((data) => {
+                blocks.value = JSON.stringify(data.blocks);
+            }).catch((error) => {
+                console.error('Saving failed: ', error);
+            });
+        }
+    });
+</script>
